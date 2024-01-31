@@ -2,17 +2,31 @@ package jp.ac.uryukyu.ie.e235735;
 
 import java.util.Scanner;
 
+/**ブラックジャッククラス
+ * Deck deck; //山札
+ * Player player; //プレイヤー
+ * Hand dealerHand; //ディーラーの手札
+ */
+
 public class BlackjackGame {
     private Deck deck;
     private Player player;
     private Hand dealerHand;
 
+    /**
+     * コンストラクタ。山札、プレイヤー、ディーラーの手札を指定する。
+     */
     public BlackjackGame() {
         deck = new Deck();
         player = new Player();
         dealerHand = new Hand();
     }
 
+    /**
+     * 最初の山札から手札を配るメソッド。
+     * プレイヤーの引いたカードは山札から削除し、手札に追加する。
+     * ディーラーの引いたカードはDealerHandに追加し、山札から削除する。
+     */
     public void dealInitialCards() {
         player.getHand().addCard(deck.drawCard());
         player.getHand().addCard(deck.drawCard());
@@ -20,6 +34,13 @@ public class BlackjackGame {
         dealerHand.addCard(deck.drawCard());
     }
 
+    /**
+     * プレイヤーの次の行動を選択するメソッド。
+     * プレイヤーの手札とディーラーの手札を表示し、ヒットするか選択させる。
+     * yを選択して21点以下であればこのループを続ける。
+     * 21点以下を超えたり、nを選択すればループを抜ける。
+     * @param scanner y/n ; yesかno
+     */
     public void playerTurn(Scanner scanner) {
         while (true) {
             System.out.println("あなたの手札は" + player.getHand() + "です。");
@@ -40,16 +61,35 @@ public class BlackjackGame {
         }
     }
 
+    /**
+     * ディーラーのターンのメソッド。
+     * 17点を超えるまでカードを引き続ける
+     */
     public void dealerTurn() {
         while (dealerHand.calculateHandValue() < 17) {
             dealerHand.addCard(deck.drawCard());
         }
     }
 
+    /**
+     * playerの手札のゲッター
+     */
+    public Hand getPlayerHand() {
+        return player.getHand();
+    }
+
+    /**
+     * dealerHandのゲッター
+     */
     public Hand getDealerHand() {
         return dealerHand;
     }    
 
+    /**
+     * どちらが勝ったか判断するメソッド。
+     * プレイヤーとディーラーの点数を比べて点数が高かった方が勝ち。
+     * ただし、ディーラーが21点を超えていたらディーラーは負けとなる。
+     */
     public void checkWinner() {
         int playerValue = player.getHand().calculateHandValue();
         int dealerValue = dealerHand.calculateHandValue();
